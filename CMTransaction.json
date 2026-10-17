@@ -1,8 +1,8 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
-    "text": "Frekuensi Pembelian Saham per Provinsi",
-    "subtitle": "Hanya Jakarta yang pernah melewati 10 juta transaksi beli dalam sebulan"
+    "text": "Stock Purchase Frequency by Province in Indonesia",
+    "subtitle": "Only Jakarta has ever exceeded 10 million buy transactions in a single month"
   },
   "width": 800,
   "height": 350,
@@ -15,7 +15,7 @@
         "min": 0,
         "max": 43,
         "step": 1,
-        "name": "Geser bulan (Jan 2023 – Agu 2026): "
+        "name": "Slide month (Jan 2023 – Aug 2026): "
       }
     }
   ],
@@ -39,11 +39,11 @@
       "filter": "datum.idx == bulanKe"
     },
     {
-      "calculate": "['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][toNumber(slice(datum.bulan, 5, 7)) - 1] + ' ' + slice(datum.bulan, 0, 4)",
+      "calculate": "['January','February','March','April','May','June','July','August','September','October','November','December'][toNumber(slice(datum.bulan, 5, 7)) - 1] + ' ' + slice(datum.bulan, 0, 4)",
       "as": "namaBulan"
     },
     {
-      "calculate": "datum.beli < 100000 ? '< 100 rb' : datum.beli < 250000 ? '100 – 250 rb' : datum.beli < 1000000 ? '250 rb – 1 jt' : datum.beli < 2500000 ? '1 – 2,5 jt' : datum.beli < 5000000 ? '2,5 – 5 jt' : datum.beli < 10000000 ? '5 – 10 jt' : '10 – 20 jt'",
+      "calculate": "datum.beli < 100000 ? '< 100k' : datum.beli < 250000 ? '100k – 250k' : datum.beli < 1000000 ? '250k – 1M' : datum.beli < 2500000 ? '1M – 2.5M' : datum.beli < 5000000 ? '2.5M – 5M' : datum.beli < 10000000 ? '5M – 10M' : '10M – 20M'",
       "as": "kelas"
     }
   ],
@@ -83,13 +83,13 @@
           "type": "ordinal",
           "scale": {
             "domain": [
-              "< 100 rb",
-              "100 – 250 rb",
-              "250 rb – 1 jt",
-              "1 – 2,5 jt",
-              "2,5 – 5 jt",
-              "5 – 10 jt",
-              "10 – 20 jt"
+              "< 100k",
+              "100k – 250k",
+              "250k – 1M",
+              "1M – 2.5M",
+              "2.5M – 5M",
+              "5M – 10M",
+              "10M – 20M"
             ],
             "range": [
               "#eff3ff",
@@ -102,7 +102,7 @@
             ]
           },
           "legend": {
-            "title": "Transaksi beli / bulan",
+            "title": "Buy transactions / month",
             "symbolType": "square",
             "symbolSize": 200,
             "symbolStrokeColor": "#bbb",
@@ -114,23 +114,23 @@
           {
             "field": "provinsi",
             "type": "nominal",
-            "title": "Provinsi"
+            "title": "Province"
           },
           {
             "field": "namaBulan",
             "type": "nominal",
-            "title": "Bulan"
+            "title": "Month"
           },
           {
             "field": "beli",
             "type": "quantitative",
-            "title": "Frekuensi beli",
+            "title": "Buy transactions",
             "format": ","
           },
           {
             "field": "kelas",
             "type": "nominal",
-            "title": "Kelompok"
+            "title": "Range"
           }
         ]
       }
