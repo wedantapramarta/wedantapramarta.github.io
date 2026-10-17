@@ -26,9 +26,7 @@
       "parse": {
         "beli": "number",
         "tahun": "string",
-        "bulan": "string",
-        "lon": "number",
-        "lat": "number"
+        "bulan": "string"
       }
     }
   },
@@ -100,7 +98,7 @@
               "#6baed6",
               "#3182bd",
               "#08519c",
-              "#08306b"
+              "#ff6a00"
             ]
           },
           "legend": {
@@ -162,129 +160,6 @@
         },
         "text": {
           "field": "namaBulan"
-        }
-      }
-    },
-    {
-      "transform": [
-        {
-          "filter": "datum.provinsi == 'DKI JAKARTA'"
-        },
-        {
-          "calculate": "'DKI Jakarta: ' + format(datum.beli / 1000000, '.1f') + ' juta'",
-          "as": "labelJkt"
-        }
-      ],
-      "mark": {
-        "type": "rule",
-        "color": "#333",
-        "strokeWidth": 1
-      },
-      "encoding": {
-        "longitude": {
-          "datum": 106.83
-        },
-        "latitude": {
-          "datum": -6.2
-        },
-        "longitude2": {
-          "datum": 108.3
-        },
-        "latitude2": {
-          "datum": -4.4
-        }
-      }
-    },
-    {
-      "transform": [
-        {
-          "filter": "datum.provinsi == 'DKI JAKARTA'"
-        },
-        {
-          "calculate": "'DKI Jakarta: ' + format(datum.beli / 1000000, '.1f') + ' juta'",
-          "as": "labelJkt"
-        }
-      ],
-      "mark": {
-        "type": "circle",
-        "size": 60,
-        "color": "#08306b",
-        "fillOpacity": 0,
-        "strokeWidth": 1.5
-      },
-      "encoding": {
-        "longitude": {
-          "datum": 106.83
-        },
-        "latitude": {
-          "datum": -6.2
-        }
-      }
-    },
-    {
-      "transform": [
-        {
-          "filter": "datum.provinsi == 'DKI JAKARTA'"
-        },
-        {
-          "calculate": "'DKI Jakarta: ' + format(datum.beli / 1000000, '.1f') + ' juta'",
-          "as": "labelJkt"
-        }
-      ],
-      "mark": {
-        "type": "text",
-        "align": "left",
-        "baseline": "bottom",
-        "dx": 3,
-        "dy": -2,
-        "fontSize": 13,
-        "fontWeight": "bold",
-        "color": "#b30000",
-        "stroke": "white",
-        "strokeWidth": 4,
-        "strokeJoin": "round"
-      },
-      "encoding": {
-        "longitude": {
-          "datum": 108.3
-        },
-        "latitude": {
-          "datum": -4.4
-        },
-        "text": {
-          "field": "labelJkt"
-        }
-      }
-    },
-    {
-      "transform": [
-        {
-          "filter": "datum.provinsi == 'DKI JAKARTA'"
-        },
-        {
-          "calculate": "'DKI Jakarta: ' + format(datum.beli / 1000000, '.1f') + ' juta'",
-          "as": "labelJkt"
-        }
-      ],
-      "mark": {
-        "type": "text",
-        "align": "left",
-        "baseline": "bottom",
-        "dx": 3,
-        "dy": -2,
-        "fontSize": 13,
-        "fontWeight": "bold",
-        "color": "#08306b"
-      },
-      "encoding": {
-        "longitude": {
-          "datum": 108.3
-        },
-        "latitude": {
-          "datum": -4.4
-        },
-        "text": {
-          "field": "labelJkt"
         }
       }
     }
