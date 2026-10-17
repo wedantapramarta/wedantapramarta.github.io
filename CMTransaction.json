@@ -1,6 +1,9 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Frekuensi Pembelian Saham per Provinsi, Bulan per Bulan",
+  "title": {
+    "text": "Frekuensi Pembelian Saham per Provinsi",
+    "subtitle": "Hanya Jakarta yang pernah melewati 10 juta transaksi beli dalam sebulan"
+  },
   "width": 800,
   "height": 350,
   "params": [
@@ -17,12 +20,15 @@
     }
   ],
   "data": {
-    "url": "https://raw.githubusercontent.com/wedantapramarta/wedantapramarta.github.io/refs/heads/main/pembelian_saham_provinsi.csv",
+    "url": "https://raw.githubusercontent.com/wedantapramarta/wedantapramarta.github.io/refs/heads/main/pembelian_saham_provinsi%20v2.csv",
     "format": {
       "type": "csv",
       "parse": {
         "beli": "number",
-        "tahun": "string"
+        "tahun": "string",
+        "bulan": "string",
+        "lon": "number",
+        "lat": "number"
       }
     }
   },
@@ -37,6 +43,10 @@
     {
       "calculate": "['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][toNumber(slice(datum.bulan, 5, 7)) - 1] + ' ' + slice(datum.bulan, 0, 4)",
       "as": "namaBulan"
+    },
+    {
+      "calculate": "datum.beli < 100000 ? '< 100 rb' : datum.beli < 250000 ? '100 – 250 rb' : datum.beli < 1000000 ? '250 rb – 1 jt' : datum.beli < 2500000 ? '1 – 2,5 jt' : datum.beli < 5000000 ? '2,5 – 5 jt' : datum.beli < 10000000 ? '5 – 10 jt' : '10 – 20 jt'",
+      "as": "kelas"
     }
   ],
   "layer": [
@@ -62,7 +72,7 @@
       },
       "mark": {
         "type": "geoshape",
-        "stroke": "white",
+        "stroke": "#bbbbbb",
         "strokeWidth": 0.5
       },
       "encoding": {
@@ -71,17 +81,36 @@
           "type": "geojson"
         },
         "color": {
-          "field": "beli",
-          "type": "quantitative",
+          "field": "kelas",
+          "type": "ordinal",
           "scale": {
-            "type": "log",
-            "scheme": "orangered",
             "domain": [
-              4000,
-              20000000
+              "< 100 rb",
+              "100 – 250 rb",
+              "250 rb – 1 jt",
+              "1 – 2,5 jt",
+              "2,5 – 5 jt",
+              "5 – 10 jt",
+              "10 – 20 jt"
+            ],
+            "range": [
+              "#eff3ff",
+              "#c6dbef",
+              "#9ecae1",
+              "#6baed6",
+              "#3182bd",
+              "#08519c",
+              "#08306b"
             ]
           },
-          "title": "Frekuensi beli"
+          "legend": {
+            "title": "Transaksi beli / bulan",
+            "symbolType": "square",
+            "symbolSize": 200,
+            "symbolStrokeColor": "#bbb",
+            "symbolStrokeWidth": 0.5,
+            "labelFontSize": 11
+          }
         },
         "tooltip": [
           {
@@ -99,6 +128,11 @@
             "type": "quantitative",
             "title": "Frekuensi beli",
             "format": ","
+          },
+          {
+            "field": "kelas",
+            "type": "nominal",
+            "title": "Kelompok"
           }
         ]
       }
@@ -134,38 +168,123 @@
     {
       "transform": [
         {
-          "aggregate": [
-            {
-              "op": "sum",
-              "field": "beli",
-              "as": "totalBulan"
-            }
-          ],
-          "groupby": [
-            "namaBulan"
-          ]
+          "filter": "datum.provinsi == 'DKI JAKARTA'"
         },
         {
-          "calculate": "'Total semua provinsi: ' + format(datum.totalBulan, ',')",
-          "as": "labelTotal"
+          "calculate": "'DKI Jakarta: ' + format(datum.beli / 1000000, '.1f') + ' juta'",
+          "as": "labelJkt"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#333",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "longitude": {
+          "datum": 106.83
+        },
+        "latitude": {
+          "datum": -6.2
+        },
+        "longitude2": {
+          "datum": 108.3
+        },
+        "latitude2": {
+          "datum": -4.4
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.provinsi == 'DKI JAKARTA'"
+        },
+        {
+          "calculate": "'DKI Jakarta: ' + format(datum.beli / 1000000, '.1f') + ' juta'",
+          "as": "labelJkt"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "size": 60,
+        "color": "#08306b",
+        "fillOpacity": 0,
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "longitude": {
+          "datum": 106.83
+        },
+        "latitude": {
+          "datum": -6.2
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.provinsi == 'DKI JAKARTA'"
+        },
+        {
+          "calculate": "'DKI Jakarta: ' + format(datum.beli / 1000000, '.1f') + ' juta'",
+          "as": "labelJkt"
         }
       ],
       "mark": {
         "type": "text",
         "align": "left",
-        "baseline": "top",
-        "fontSize": 13
+        "baseline": "bottom",
+        "dx": 3,
+        "dy": -2,
+        "fontSize": 13,
+        "fontWeight": "bold",
+        "color": "#b30000",
+        "stroke": "white",
+        "strokeWidth": 4,
+        "strokeJoin": "round"
       },
       "encoding": {
-        "x": {
-          "value": 10
+        "longitude": {
+          "datum": 108.3
         },
-        "y": {
-          "value": 328
+        "latitude": {
+          "datum": -4.4
         },
         "text": {
-          "field": "labelTotal",
-          "type": "nominal"
+          "field": "labelJkt"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.provinsi == 'DKI JAKARTA'"
+        },
+        {
+          "calculate": "'DKI Jakarta: ' + format(datum.beli / 1000000, '.1f') + ' juta'",
+          "as": "labelJkt"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "bottom",
+        "dx": 3,
+        "dy": -2,
+        "fontSize": 13,
+        "fontWeight": "bold",
+        "color": "#08306b"
+      },
+      "encoding": {
+        "longitude": {
+          "datum": 108.3
+        },
+        "latitude": {
+          "datum": -4.4
+        },
+        "text": {
+          "field": "labelJkt"
         }
       }
     }
