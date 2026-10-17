@@ -1,0 +1,176 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Frekuensi Pembelian Saham per Provinsi, Bulan per Bulan",
+  "width": 800,
+  "height": 350,
+  "params": [
+    {
+      "name": "bulanKe",
+      "value": 0,
+      "bind": {
+        "input": "range",
+        "min": 0,
+        "max": 43,
+        "step": 1,
+        "name": "Geser bulan (Jan 2023 – Agu 2026): "
+      }
+    }
+  ],
+  "data": {
+    "url": "https://raw.githubusercontent.com/wedantapramarta/wedantapramarta.github.io/refs/heads/main/pembelian_saham_provinsi.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "beli": "number",
+        "tahun": "string"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "(toNumber(slice(datum.bulan, 0, 4)) - 2023) * 12 + toNumber(slice(datum.bulan, 5, 7)) - 1",
+      "as": "idx"
+    },
+    {
+      "filter": "datum.idx == bulanKe"
+    },
+    {
+      "calculate": "['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][toNumber(slice(datum.bulan, 5, 7)) - 1] + ' ' + slice(datum.bulan, 0, 4)",
+      "as": "namaBulan"
+    }
+  ],
+  "layer": [
+    {
+      "transform": [
+        {
+          "lookup": "provinsi",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/wedantapramarta/wedantapramarta.github.io/refs/heads/main/indonesia_provinsi.geojson",
+              "format": {
+                "type": "json",
+                "property": "features"
+              }
+            },
+            "key": "properties.Propinsi"
+          },
+          "as": "geo"
+        }
+      ],
+      "projection": {
+        "type": "mercator"
+      },
+      "mark": {
+        "type": "geoshape",
+        "stroke": "white",
+        "strokeWidth": 0.5
+      },
+      "encoding": {
+        "shape": {
+          "field": "geo",
+          "type": "geojson"
+        },
+        "color": {
+          "field": "beli",
+          "type": "quantitative",
+          "scale": {
+            "type": "log",
+            "scheme": "orangered",
+            "domain": [
+              4000,
+              20000000
+            ]
+          },
+          "title": "Frekuensi beli"
+        },
+        "tooltip": [
+          {
+            "field": "provinsi",
+            "type": "nominal",
+            "title": "Provinsi"
+          },
+          {
+            "field": "namaBulan",
+            "type": "nominal",
+            "title": "Bulan"
+          },
+          {
+            "field": "beli",
+            "type": "quantitative",
+            "title": "Frekuensi beli",
+            "format": ","
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "aggregate": [],
+          "groupby": [
+            "namaBulan"
+          ]
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "top",
+        "fontSize": 22,
+        "fontWeight": "bold"
+      },
+      "encoding": {
+        "x": {
+          "value": 10
+        },
+        "y": {
+          "value": 300
+        },
+        "text": {
+          "field": "namaBulan"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "aggregate": [
+            {
+              "op": "sum",
+              "field": "beli",
+              "as": "totalBulan"
+            }
+          ],
+          "groupby": [
+            "namaBulan"
+          ]
+        },
+        {
+          "calculate": "'Total semua provinsi: ' + format(datum.totalBulan, ',')",
+          "as": "labelTotal"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "top",
+        "fontSize": 13
+      },
+      "encoding": {
+        "x": {
+          "value": 10
+        },
+        "y": {
+          "value": 328
+        },
+        "text": {
+          "field": "labelTotal",
+          "type": "nominal"
+        }
+      }
+    }
+  ],
+  "view": {
+    "stroke": null
+  }
+}
