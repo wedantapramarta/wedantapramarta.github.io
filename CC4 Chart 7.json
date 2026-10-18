@@ -1,0 +1,103 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 340,
+  "height": 340,
+  "data": {
+    "url": "https://raw.githubusercontent.com/wedantapramarta/wedantapramarta.github.io/refs/heads/main/cc4_share_by_country.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "share": "number",
+        "rank": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.country + ' (' + format(datum.share, '.2f') + '%)'",
+      "as": "label"
+    }
+  ],
+  "mark": {
+    "type": "arc",
+    "stroke": "white",
+    "strokeWidth": 1.5
+  },
+  "encoding": {
+    "theta": {
+      "field": "share",
+      "type": "quantitative",
+      "stack": true,
+      "scale": {
+        "range": [
+          1.5708,
+          7.854
+        ]
+      }
+    },
+    "order": {
+      "field": "rank",
+      "type": "quantitative",
+      "sort": "descending"
+    },
+    "color": {
+      "field": "label",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "U.S. (83.25%)",
+          "Brazil (4.97%)",
+          "India (2.09%)",
+          "Canada (2.09%)",
+          "China (1.83%)",
+          "Australia (1.57%)",
+          "U.K. (1.05%)",
+          "Israel (1.05%)",
+          "Germany (1.05%)",
+          "Hong Kong (1.05%)"
+        ],
+        "range": [
+          "#8dd3c7",
+          "#ffffb3",
+          "#bebada",
+          "#fb8072",
+          "#80b1d3",
+          "#fdb462",
+          "#b3de69",
+          "#fccde5",
+          "#d9d9d9",
+          "#bc80bd"
+        ]
+      },
+      "legend": {
+        "title": null,
+        "orient": "right",
+        "labelFontSize": 13,
+        "symbolType": "square",
+        "symbolSize": 180,
+        "rowPadding": 6,
+        "strokeColor": "#cccccc",
+        "padding": 12,
+        "labelColor": "#333"
+      }
+    },
+    "tooltip": [
+      {
+        "field": "country",
+        "title": "Country"
+      },
+      {
+        "field": "share",
+        "type": "quantitative",
+        "title": "Share (%)",
+        "format": ".2f"
+      }
+    ]
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "font": "Arial, Helvetica, sans-serif"
+  }
+}
