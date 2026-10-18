@@ -2,10 +2,11 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
     "text": "Stock Purchase Frequency by Province in Indonesia",
-    "subtitle": "Only Jakarta has ever exceeded 10 million buy transactions in a single month"
+    "subtitle": [
+      "Only Jakarta has ever exceeded 10 million buy transactions in a single month.",
+      "Click a legend color to highlight provinces in that range (double-click the map to reset)."
+    ]
   },
-  "width": 800,
-  "height": 350,
   "params": [
     {
       "name": "bulanKe",
@@ -50,9 +51,6 @@
       "as": "idx"
     },
     {
-      "filter": "datum.idx == bulanKe"
-    },
-    {
       "calculate": "['January','February','March','April','May','June','July','August','September','October','November','December'][toNumber(slice(datum.bulan, 5, 7)) - 1] + ' ' + slice(datum.bulan, 0, 4)",
       "as": "namaBulan"
     },
@@ -67,8 +65,21 @@
     {
       "calculate": "datum.kode == 'BT' ? datum.lon - 0.6 : datum.kode == 'JK' ? datum.lon + 0.2 : datum.lon",
       "as": "lonLabel"
+    },
+    {
+      "filter": "datum.idx == bulanKe"
     }
   ],
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  },
+  "width": 620,
+  "height": 330,
+  "projection": {
+    "type": "mercator"
+  },
   "layer": [
     {
       "transform": [
@@ -156,8 +167,27 @@
             "type": "nominal",
             "title": "Range"
           }
-        ]
-      }
+        ],
+        "opacity": {
+          "condition": {
+            "param": "pilihKelas",
+            "value": 1
+          },
+          "value": 0.12
+        }
+      },
+      "params": [
+        {
+          "name": "pilihKelas",
+          "select": {
+            "type": "point",
+            "fields": [
+              "kelas"
+            ]
+          },
+          "bind": "legend"
+        }
+      ]
     },
     {
       "mark": {
@@ -227,18 +257,12 @@
           "value": 10
         },
         "y": {
-          "value": 300
+          "value": 290
         },
         "text": {
           "field": "namaBulan"
         }
       }
     }
-  ],
-  "view": {
-    "stroke": null
-  },
-  "projection": {
-    "type": "mercator"
-  }
+  ]
 }
