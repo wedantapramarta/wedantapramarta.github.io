@@ -1,0 +1,115 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "The U.S. accounts for over 80% of the total",
+    "subtitle": "Share by country, %",
+    "anchor": "start",
+    "fontSize": 16,
+    "subtitleFontSize": 12,
+    "subtitleColor": "#555"
+  },
+  "width": 420,
+  "height": {
+    "step": 26
+  },
+  "data": {
+    "url": "https://raw.githubusercontent.com/wedantapramarta/wedantapramarta.github.io/refs/heads/main/cc4_share_by_country.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "share": "number",
+        "rank": "number"
+      }
+    }
+  },
+  "encoding": {
+    "y": {
+      "field": "country",
+      "type": "nominal",
+      "sort": {
+        "field": "rank",
+        "order": "ascending"
+      },
+      "title": null,
+      "axis": {
+        "ticks": false,
+        "domain": false,
+        "labelFontSize": 12,
+        "labelPadding": 6
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "bar",
+        "cornerRadiusEnd": 2
+      },
+      "encoding": {
+        "x": {
+          "field": "share",
+          "type": "quantitative",
+          "title": null,
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              95
+            ]
+          }
+        },
+        "color": {
+          "condition": {
+            "test": "datum.country == 'U.S.'",
+            "value": "#1f7a8c"
+          },
+          "value": "#b8c4c9"
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "title": "Country"
+          },
+          {
+            "field": "share",
+            "type": "quantitative",
+            "title": "Share (%)",
+            "format": ".2f"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 4,
+        "fontSize": 12
+      },
+      "encoding": {
+        "x": {
+          "field": "share",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "share",
+          "type": "quantitative",
+          "format": ".1f"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.country == 'U.S.'",
+            "value": "#1f7a8c"
+          },
+          "value": "#555"
+        }
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "font": "Arial, Helvetica, sans-serif"
+  }
+}
