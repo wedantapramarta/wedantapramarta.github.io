@@ -26,11 +26,25 @@
       "parse": {
         "beli": "number",
         "tahun": "string",
-        "bulan": "string"
+        "bulan": "string",
+        "lon": "number",
+        "lat": "number"
       }
     }
   },
   "transform": [
+    {
+      "lookup": "provinsi",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/wedantapramarta/wedantapramarta.github.io/refs/heads/main/kegiatan_provinsi_2024_2025.csv"
+        },
+        "key": "provinsi_peta",
+        "fields": [
+          "kode"
+        ]
+      }
+    },
     {
       "calculate": "(toNumber(slice(datum.bulan, 0, 4)) - 2023) * 12 + toNumber(slice(datum.bulan, 5, 7)) - 1",
       "as": "idx"
@@ -45,6 +59,14 @@
     {
       "calculate": "datum.beli < 100000 ? '< 100k' : datum.beli < 250000 ? '100k – 250k' : datum.beli < 1000000 ? '250k – 1M' : datum.beli < 2500000 ? '1M – 2.5M' : datum.beli < 5000000 ? '2.5M – 5M' : datum.beli < 10000000 ? '5M – 10M' : '10M – 20M'",
       "as": "kelas"
+    },
+    {
+      "calculate": "datum.kode == 'JK' ? datum.lat + 0.9 : datum.kode == 'BT' ? datum.lat + 0.3 : datum.kode == 'YO' ? datum.lat - 0.55 : datum.kode == 'GO' ? datum.lat - 0.35 : datum.lat",
+      "as": "latLabel"
+    },
+    {
+      "calculate": "datum.kode == 'BT' ? datum.lon - 0.6 : datum.kode == 'JK' ? datum.lon + 0.2 : datum.lon",
+      "as": "lonLabel"
     }
   ],
   "layer": [
@@ -65,13 +87,10 @@
           "as": "geo"
         }
       ],
-      "projection": {
-        "type": "mercator"
-      },
       "mark": {
         "type": "geoshape",
-        "stroke": "#bbbbbb",
-        "strokeWidth": 0.5
+        "stroke": "#7a7a7a",
+        "strokeWidth": 0.35
       },
       "encoding": {
         "shape": {
@@ -92,12 +111,12 @@
               "10M – 20M"
             ],
             "range": [
-              "#eff3ff",
-              "#c6dbef",
-              "#9ecae1",
-              "#6baed6",
-              "#3182bd",
-              "#08519c",
+              "#fff3a0",
+              "#a1dab4",
+              "#41b6c4",
+              "#2c7fb8",
+              "#253494",
+              "#081d58",
               "#ff6a00"
             ]
           },
@@ -117,6 +136,11 @@
             "title": "Province"
           },
           {
+            "field": "kode",
+            "type": "nominal",
+            "title": "Code"
+          },
+          {
             "field": "namaBulan",
             "type": "nominal",
             "title": "Month"
@@ -133,6 +157,53 @@
             "title": "Range"
           }
         ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 9,
+        "fontWeight": "bold",
+        "stroke": "white",
+        "strokeWidth": 2.5,
+        "strokeJoin": "round",
+        "color": "white"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lonLabel",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latLabel",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "kode",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 9,
+        "fontWeight": "bold",
+        "color": "#1a1a1a"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lonLabel",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latLabel",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "kode",
+          "type": "nominal"
+        }
       }
     },
     {
@@ -166,5 +237,8 @@
   ],
   "view": {
     "stroke": null
+  },
+  "projection": {
+    "type": "mercator"
   }
 }
