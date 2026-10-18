@@ -1,0 +1,165 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Activities per Province, 2024 vs 2025",
+    "subtitle": "Each line connects a province's 2024 and 2025 activity count"
+  },
+  "width": 420,
+  "height": {
+    "step": 16
+  },
+  "data": {
+    "url": "https://raw.githubusercontent.com/wedantapramarta/wedantapramarta.github.io/refs/heads/main/kegiatan_provinsi_2024_2025.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "kegiatan_2024": "number",
+        "kegiatan_2025": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.provinsi + ' (' + datum.kode + ')'",
+      "as": "label"
+    },
+    {
+      "calculate": "datum.kegiatan_2025 - datum.kegiatan_2024",
+      "as": "selisih"
+    },
+    {
+      "fold": [
+        "kegiatan_2024",
+        "kegiatan_2025"
+      ],
+      "as": [
+        "kolom",
+        "kegiatan"
+      ]
+    },
+    {
+      "calculate": "slice(datum.kolom, 9)",
+      "as": "tahun"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "label",
+      "type": "nominal",
+      "sort": {
+        "field": "kegiatan",
+        "op": "max",
+        "order": "descending"
+      },
+      "axis": {
+        "title": null,
+        "ticks": false,
+        "labelPadding": 5,
+        "domain": false
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "color": "#d4d4d4",
+        "strokeWidth": 2
+      },
+      "encoding": {
+        "x": {
+          "field": "kegiatan",
+          "type": "quantitative",
+          "aggregate": "min"
+        },
+        "x2": {
+          "field": "kegiatan",
+          "aggregate": "max"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "circle",
+        "size": 70,
+        "opacity": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "kegiatan",
+          "type": "quantitative",
+          "title": "Number of activities",
+          "axis": {
+            "ticks": false,
+            "labelPadding": 5,
+            "grid": true,
+            "gridColor": "#eeeeee",
+            "values": [
+              0,
+              400,
+              800,
+              1200,
+              1600,
+              2000
+            ]
+          },
+          "scale": {
+            "domain": [
+              0,
+              2200
+            ],
+            "nice": false
+          }
+        },
+        "color": {
+          "field": "tahun",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "2024",
+              "2025"
+            ],
+            "range": [
+              "#9dc3e6",
+              "#f4a3a8"
+            ]
+          },
+          "legend": {
+            "title": null,
+            "orient": "top"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "label",
+            "title": "Province"
+          },
+          {
+            "field": "tahun",
+            "title": "Year"
+          },
+          {
+            "field": "kegiatan",
+            "type": "quantitative",
+            "title": "Activities"
+          },
+          {
+            "field": "selisih",
+            "type": "quantitative",
+            "title": "Change 2024→2025",
+            "format": "+,"
+          }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": "transparent"
+    },
+    "axis": {
+      "labelColor": "#555",
+      "titleColor": "#555"
+    }
+  }
+}
