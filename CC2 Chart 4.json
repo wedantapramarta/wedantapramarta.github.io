@@ -34,11 +34,14 @@
   "encoding": {
     "x": {
       "field": "date",
-      "type": "temporal",
+      "timeUnit": "year",
+      "type": "ordinal",
       "axis": {
         "title": "",
-        "titleColor": "#122B39",
-        "grid": false
+        "grid": false,
+        "labelAngle": 0,
+        "labelOverlap": true,
+        "titleColor": "#122B39"
       }
     },
     "y": {
