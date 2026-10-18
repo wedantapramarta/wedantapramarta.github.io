@@ -4,15 +4,15 @@
     "text": "GDP Growth",
     "anchor": "start",
     "subtitle": "Annually, %| Source: FRED through ECO API",
-    "fontSize": "14",
-    "subtitleFontSize": "12",
+    "fontSize": 14,
+    "subtitleFontSize": 12,
     "color": "#000000",
     "subtitleColor": "#000000"
   },
-  "height": "250",
+  "height": 250,
   "width": "container",
   "autosize": {
-    "type": "fit",
+    "type": "fit-x",
     "contains": "padding"
   },
   "background": "#ffffff",
@@ -29,7 +29,7 @@
   "mark": {
     "type": "bar",
     "color": "#f4134d",
-    "strokeWidth": "2"
+    "strokeWidth": 2
   },
   "encoding": {
     "x": {
